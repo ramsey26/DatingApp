@@ -23,7 +23,7 @@ namespace API.Controllers
             return await _dbContext.Users.ToListAsync();
         }
 
-        //api/Users/2
+        //api/Users/3
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>> GetUser(int id){
             var user = await _dbContext.Users.FindAsync(id);
