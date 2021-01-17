@@ -49,10 +49,10 @@ namespace API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
-            // if(env.IsDevelopment()){
-            //      app.UseSwagger();
-            //      app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
-            // }
+            if(env.IsDevelopment()){
+                 app.UseSwagger();
+                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+            }
             
             // if (env.IsDevelopment())
             // {
