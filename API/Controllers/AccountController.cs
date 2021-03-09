@@ -29,7 +29,7 @@ namespace API.Controllers
         {
 
             var user = await _context.Users.Include(p => p.Photos)
-                            .SingleOrDefaultAsync(x => x.UserName == loginDTO.Username.ToLower());
+                            .SingleOrDefaultAsync(x => x.UserName == loginDTO.Username.Trim().ToLower());
             if (user == null) return Unauthorized("Invalid Username");
 
             using var hmac = new HMACSHA512(user.PasswordSalt);
@@ -45,7 +45,8 @@ namespace API.Controllers
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
                 PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
-                KnownAs = user.KnownAs
+                KnownAs = user.KnownAs,
+                Gender = user.Gender
             };
         }
 
@@ -53,7 +54,7 @@ namespace API.Controllers
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO)
         {
 
-            if (await UserExits(registerDTO.Username)) return BadRequest("Username is taken");
+            if (await UserExits(registerDTO.Username.Trim())) return BadRequest("Username is taken");
 
             var user = _mapper.Map<AppUser>(registerDTO);
 
@@ -65,13 +66,13 @@ namespace API.Controllers
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
-
+            
             return new UserDTO
             {
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
-                KnownAs = user.KnownAs
+                KnownAs = user.KnownAs,
+                Gender = user.Gender
             };
         }
 
