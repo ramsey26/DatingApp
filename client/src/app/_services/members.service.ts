@@ -18,28 +18,28 @@ export class MembersService {
   members: Member[] = [];
   baseUrl = environment.apiUrl;
   memberCache = new Map();
-  user : User;
-  userParams :UserParams;
+  user: User;
+  userParams: UserParams;
 
-  constructor(private http: HttpClient, private accountService : AccountService) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe(user=>{
+  constructor(private http: HttpClient, private accountService: AccountService) {
+    this.accountService.currentUser$.pipe(take(1)).subscribe(user => {
       this.user = user;
       this.userParams = new UserParams(this.user);
     })
-   }
+  }
 
-   getUserParams(){
-     return this.userParams;
-   }
+  getUserParams() {
+    return this.userParams;
+  }
 
-   setUserParams(params : UserParams){
-     this.userParams = params;
-   }
+  setUserParams(params: UserParams) {
+    this.userParams = params;
+  }
 
-   resetUserParams(){
-     this.userParams = new UserParams(this.user);
-     return this.userParams;
-   }
+  resetUserParams() {
+    this.userParams = new UserParams(this.user);
+    return this.userParams;
+  }
   getMembers(userParams: UserParams) {
 
     var response = this.memberCache.get(Object.values(userParams).join('-'));
@@ -110,5 +110,17 @@ export class MembersService {
 
   deletePhoto(photoId: number) {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+  }
+
+  addLike(username: string) {
+    return this.http.post(this.baseUrl + "likes/" + username, {});
+  }
+
+  getLikes(predicate: string, pageNumber, pageSize) {
+    let params = this.getPaginationHeaders(pageNumber,pageSize);
+
+    params = params.append("predicate",predicate);
+
+    return this.getPaginatedResult<Partial<Member[]>>(this.baseUrl + "likes",params);
   }
 }
