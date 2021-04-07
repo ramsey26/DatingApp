@@ -13,7 +13,7 @@ export class BusyService {
   busy(){
     this.busyRequestCount++;
     this.spinnerService.show(undefined,{
-      type:'ball-pulse',
+      type:'ball-atom',
       bdColor : "rgba(234,235,225,0.69)",
       size: "medium" ,
       color :"#eb6864"
