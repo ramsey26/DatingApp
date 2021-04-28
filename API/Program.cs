@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
@@ -18,22 +19,29 @@ namespace API
     {
         public static async Task Main(string[] args)
         {
-           var host = CreateHostBuilder(args).Build();
-           using var scope = host.Services.CreateScope();
-           var services = scope.ServiceProvider;
-           try{
-               var context = services.GetRequiredService<DataContext>();
-               var userManager = services.GetRequiredService<UserManager<AppUser>>();
-               var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
-               await context.Database.MigrateAsync();
-               await Seed.SeeedUsers(userManager,roleManager);
-           }
-           catch(Exception ex){
-               var logger = services.GetRequiredService<ILogger<Program>>();
-               logger.LogError(ex,"An error occured during migration.");
-           }
 
-           await host.RunAsync();
+            // if (args[0] == "waitfordebugger")
+            // {
+            //     Thread.Sleep(10000); // Wait 10 Seconds
+            // }
+            var host = CreateHostBuilder(args).Build();
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<DataContext>();
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+                await context.Database.MigrateAsync();
+                await Seed.SeeedUsers(userManager, roleManager);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occured during migration.");
+            }
+
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

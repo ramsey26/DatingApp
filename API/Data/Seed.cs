@@ -17,34 +17,36 @@ namespace API.Data
 
             var userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
             var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
-            
-            if(users==null) return;
+
+            if (users == null) return;
 
             var roles = new List<AppRole>{
-                new AppRole{Name="Member"},
-                new AppRole{Name="Admin"},
-                new AppRole{Name="Moderator"}
+                new AppRole{ Name="Member"},
+                new AppRole{ Name="Admin"},
+                new AppRole{ Name="Moderator"}
             };
 
-            foreach(var role in roles){
+            foreach (var role in roles)
+            {
                 await roleManager.CreateAsync(role);
             }
 
             foreach (var user in users)
             {
-               user.UserName = user.UserName.ToLower();
-               await userManager.CreateAsync(user,"Qaz@12345");
-               await userManager.AddToRoleAsync(user,"Member");
+                user.UserName = user.UserName.ToLower();
+                await userManager.CreateAsync(user, "Qaz@12345");
+                await userManager.AddToRoleAsync(user, "Member");
             }
 
-        var admin = new AppUser{
-            UserName = "admin"
-        };
+            var admin = new AppUser
+            {
+                UserName = "admin"
+            };
 
-        await userManager.CreateAsync(admin,"Wsx@12345");
-        await userManager.AddToRolesAsync(admin,new[]{"Admin","Moderator"} );
+            await userManager.CreateAsync(admin, "Wsx@12345");
+            await userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" });
 
-        
+
 
         }
     }
