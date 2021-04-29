@@ -26,6 +26,7 @@ namespace API
 {
     public class Startup
     {
+
         private readonly IConfiguration _config;
 
         public Startup(IConfiguration config)
@@ -82,7 +83,7 @@ namespace API
                 endpoints.MapControllers();
                 endpoints.MapHub<PresenceHub>("hubs/presence");
                 endpoints.MapHub<MessageHub>("hubs/message");
-                endpoints.MapFallbackToController("Index","Fallback");
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
